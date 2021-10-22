@@ -1,6 +1,7 @@
 //Global Variables
 
 const keyboard = document.getElementById('qwerty');
+const button = qwerty.querySelectorAll('button');
 const phrase = document.getElementById('phrase');
 let startGame = document.querySelector('.btn__reset');
 
@@ -8,16 +9,18 @@ let startGame = document.querySelector('.btn__reset');
 let missed = 0;
 
 //Array storing various phrases for display.
-const phrases = ["Nothing is entirely free", 
+const phrases = ["Live and learn", 
     "Throw caution to the wind", 
     "Cut me some slack", 
     "Speak of the devil",
     "Hang in there",
 ];
 
+const overlay = document.getElementById('overlay');
+const start = document.querySelector('.start');
+
 /* This code hides the screen overlay when the user clicks the "Start Game button". */
-startGame.addEventListener('click', () => {
-    const overlay = document.getElementById('overlay');
+startGame.addEventListener('click', (e) => {
     overlay.style.display = 'none';
     console.log('Hidden overlay is working!'); //clear during refactoring -- X
 })
@@ -43,9 +46,8 @@ let buttonClicked = keyboard.addEventListener('click',(e) => {
 */
 function getRandomPhraseAsArray(array) {
     const randomPhrase = array[Math.floor(Math.random() * phrases.length)];
-    const phraseCharacters = [randomPhrase.split('')];
     console.log("Random phrase array is working!") //clear during refactoring -- X
-    return phraseCharacters;
+    return randomPhrase.split('');
 };
 
 const phraseForDisplay = getRandomPhraseAsArray(phrases);
@@ -56,26 +58,25 @@ console.log(phraseForDisplay);
     Loops through an array of characters. 
     For each character in the array it creates a list item with character inside. 
     It appends the list item to the #phrase ul 
-    If character in the array is a letter “letter” class is added
-    If character is a space, "space" class is added
+    If character in the array is a letter the “letter” class is added
+    If character is a space the "space" class is added
 */
 
-//NEEDS FIX
-function addPhraseToDisplay(letters) {
-    const ul = phrase.querySelector('ul');
-    for (let i = 0; i < letters.length; i++) {
-        const li = document.createElement(`li`);
-        li.innerHTML = letters[i];
-        ul.appendChild(li);
-        if (li.innerHTML === /[a-zA-Z]/ ) {
-            li.className = 'letter';
-        } else {
-            li.className = 'space';
-        }
-        console.log('Working finally!'); //clear during refactoring -- X
-        return ul;
-    };
-}
+    function addPhraseToDisplay(arr) {
+        for (let i=0; i < arr.length; i++) {
+            const list = phrase.querySelector('ul');
+            const arrLetter = document.createElement('li');
+            arrLetter.textContent = `${arr[i]}`;
+            console.log(arrLetter); //clear during refactoring -- X
+            list.append(arrLetter);
+            if (arrLetter.textContent != ' ') {
+                arrLetter.className = 'letter';
+            } else {
+                arrLetter.className = 'space';
+            };
+            console.log('addPhraseToDisplay is working!') //clear during refactoring -- X
+        };
+    }
 
 let displayedPhrase = addPhraseToDisplay(phraseForDisplay);
 
@@ -88,22 +89,42 @@ let displayedPhrase = addPhraseToDisplay(phraseForDisplay);
     If a match is not found it returns null.
 */
 
+
 function checkLetter(buttonClicked) {
     const letters = document.querySelectorAll('.letter');
-    let lettersMatching = [];
-    for (i = 0; i < letters.length; i++){
-        if (i === buttonClicked) {
-            i.ClassName = 'show';
-            lettersMatching += i;
-            //console.log(`The letter is ${i}`);
-            return i;
-        } else {
-            //console.log('Wrong');
-            return null;
-        };
-    };
+
 }
 
 
 //Stores the letters returned from the checkLetter function
-const letterFound = [checkLetter()];
+let letterFound = [checkLetter()];
+
+/*
+--checkWin function--
+Checks if the length of the 2 variables are the same and if so displays the win overlay
+    -Changes overlay class to 'win'.
+    -Changes headline text show user won.
+    -Changes overlay display to 'flex;
+If the missed counter is greater than 4 it displays the lose overlay.
+    -Changes overlay class to 'lose'.
+    -Changes headline text to show user lost.
+    -Changes overlay display to 'flex;   
+*/
+
+function checkWin() {
+    let letterElements = document.querySelectorAll('.letter');
+    let showElements = document.querySelectorAll('.show');
+    
+    if (letterElements === showElements) {
+        overlay.className = 'win';
+        start.firstChild.textContent = 'Congratulations, you win!';
+        overlay.style.display = 'flex';
+        console.log('Winner works!');
+    } else if (missed > 4) {
+        overlay.className = 'lose';
+        start.firstChild.textContent = 'Sorry, you have lost the game. Try again!'
+        overlay.style.display = 'flex';
+        console.log('Loser works!');
+    }
+}
+
