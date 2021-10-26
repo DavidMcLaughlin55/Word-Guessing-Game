@@ -1,9 +1,10 @@
 //Global Variables
 
 const keyboard = document.getElementById('qwerty');
-const button = qwerty.querySelectorAll('button');
 const phrase = document.getElementById('phrase');
-let startGame = document.querySelector('.btn__reset');
+let startGame = document.querySelector('.btn_reset');
+const overlay = document.getElementById('overlay');
+
 
 //Stores # of mismatched keys.
 let missed = 0;
@@ -16,29 +17,7 @@ const phrases = ["Live and learn",
     "Hang in there",
 ];
 
-const overlay = document.getElementById('overlay');
-const start = document.querySelector('.start');
-
-/* This code hides the screen overlay when the user clicks the "Start Game button". */
-startGame.addEventListener('click', (e) => {
-    overlay.style.display = 'none';
-    console.log('Hidden overlay is working!'); //clear during refactoring -- X
-})
-
 //Functions 
-
-/* 
-    --buttonClicked--
-    When a player chooses a letter the “chosen” class is added to that button so the same letter can’t be chosen twice.
-*/
-let buttonClicked = keyboard.addEventListener('click',(e) => {
-    if (e.target.tagName ==='BUTTON'){
-        let button = e.target;
-        button.className = 'chosen';
-        button.disabled = true;
-        console.log('The button has been clicked!'); //clear during refactoring -- X
-    }
-});
 
 /* 
     --getRandomPhraseAsArray--
@@ -46,7 +25,6 @@ let buttonClicked = keyboard.addEventListener('click',(e) => {
 */
 function getRandomPhraseAsArray(array) {
     const randomPhrase = array[Math.floor(Math.random() * phrases.length)];
-    console.log("Random phrase array is working!") //clear during refactoring -- X
     return randomPhrase.split('');
 };
 
@@ -62,23 +40,21 @@ console.log(phraseForDisplay);
     If character is a space the "space" class is added
 */
 
-    function addPhraseToDisplay(arr) {
-        for (let i=0; i < arr.length; i++) {
-            const list = phrase.querySelector('ul');
-            const arrLetter = document.createElement('li');
-            arrLetter.textContent = `${arr[i]}`;
-            console.log(arrLetter); //clear during refactoring -- X
-            list.append(arrLetter);
-            if (arrLetter.textContent != ' ') {
-                arrLetter.className = 'letter';
-            } else {
-                arrLetter.className = 'space';
-            };
-            console.log('addPhraseToDisplay is working!') //clear during refactoring -- X
+function addPhraseToDisplay(arr) {
+    for (let i = 0; i < arr.length; i++) {
+        const list = phrase.querySelector('ul');
+        const arrLetter = document.createElement('li');
+        arrLetter.textContent = `${arr[i]}`;
+        list.append(arrLetter);
+        if (arrLetter.textContent != ' ') {
+            arrLetter.className = 'letter';
+        } else {
+            arrLetter.className = 'space';
         };
-    }
+    };
+}
 
-let displayedPhrase = addPhraseToDisplay(phraseForDisplay);
+addPhraseToDisplay(phraseForDisplay);
 
 /* 
     --checkLetter function-- 
@@ -91,13 +67,19 @@ let displayedPhrase = addPhraseToDisplay(phraseForDisplay);
 
 
 function checkLetter(buttonClicked) {
-    const letters = document.querySelectorAll('.letter');
-
+    console.log(buttonClicked);
+    const letters = document.getElementsByClassName('letter');
+    let matches = null;
+    for (let i = 0; i < letters.length; i++) {
+        if (buttonClicked.textContent === letters[i].textContent) {
+            console.log("Match!");
+            letters[i].className = 'show';
+            matches += letters[i].textContent;
+            console.log(matches);
+        }; 
+        return matches;
+    };
 }
-
-
-//Stores the letters returned from the checkLetter function
-let letterFound = [checkLetter()];
 
 /*
 --checkWin function--
@@ -111,20 +93,34 @@ If the missed counter is greater than 4 it displays the lose overlay.
     -Changes overlay display to 'flex;   
 */
 
-function checkWin() {
-    let letterElements = document.querySelectorAll('.letter');
-    let showElements = document.querySelectorAll('.show');
-    
-    if (letterElements === showElements) {
-        overlay.className = 'win';
-        start.firstChild.textContent = 'Congratulations, you win!';
-        overlay.style.display = 'flex';
-        console.log('Winner works!');
-    } else if (missed > 4) {
-        overlay.className = 'lose';
-        start.firstChild.textContent = 'Sorry, you have lost the game. Try again!'
-        overlay.style.display = 'flex';
-        console.log('Loser works!');
-    }
-}
 
+//Event Listeners
+
+/* 
+    --startGame--
+    This code hides the screen overlay when the user clicks the "Start Game button".
+ */
+startGame.addEventListener('click', (e) => {
+    overlay.style.display = 'none';
+});
+
+/* 
+    --buttonClick--
+    When a player chooses a letter the “chosen” class is added to that button so the same letter can’t be chosen twice.
+*/
+keyboard.addEventListener('click',(e) => {
+    e.preventDefault();
+    const heart = document.querySelector('.tries');
+    if (e.target.tagName ==='BUTTON'){
+        let buttonClicked = e.target;
+        buttonClicked.className = 'chosen';
+        buttonClicked.disabled = true;
+        //console.log(buttonClicked.textContent);
+        checkLetter(buttonClicked);
+        if (checkLetter(buttonClicked) === null) { 
+            heart.remove();
+            console.log("Heart removed!");
+            missed += 1;
+        }; 
+    };
+});
