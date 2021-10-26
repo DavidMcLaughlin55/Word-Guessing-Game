@@ -77,8 +77,8 @@ function checkLetter(buttonClicked) {
             matches += letters[i].textContent;
             console.log(matches);
         }; 
-        return matches;
     };
+    return matches;
 }
 
 /*
@@ -115,9 +115,8 @@ keyboard.addEventListener('click',(e) => {
         let buttonClicked = e.target;
         buttonClicked.className = 'chosen';
         buttonClicked.disabled = true;
-        //console.log(buttonClicked.textContent);
-        checkLetter(buttonClicked);
-        if (checkLetter(buttonClicked) === null) { 
+        let checked = checkLetter(buttonClicked);
+        if (checked === null) { 
             heart.remove();
             console.log("Heart removed!");
             missed += 1;
