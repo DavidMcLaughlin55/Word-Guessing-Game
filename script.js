@@ -4,6 +4,8 @@ const keyboard = document.getElementById('qwerty');
 const phrase = document.getElementById('phrase');
 let startGame = document.querySelector('.btn_reset');
 const overlay = document.getElementById('overlay');
+const letters = document.getElementsByClassName('letter');
+const showing = document.getElementsByClassName('show');
 
 
 //Stores # of mismatched keys.
@@ -23,13 +25,12 @@ const phrases = ["Live and learn",
     --getRandomPhraseAsArray--
     Function gets and random phrase from the phrases array and splits it to return the letters contained as a new array 
 */
-function getRandomPhraseAsArray(array) {
-    const randomPhrase = array[Math.floor(Math.random() * phrases.length)];
+function getRandomPhraseAsArray(arr) {
+    const randomPhrase = arr[Math.floor(Math.random() * phrases.length)];
     return randomPhrase.split('');
 };
 
 const phraseForDisplay = getRandomPhraseAsArray(phrases);
-console.log(phraseForDisplay);
 
 /* 
     --addPhraseToDisplay function-- 
@@ -65,17 +66,12 @@ addPhraseToDisplay(phraseForDisplay);
     If a match is not found it returns null.
 */
 
-
 function checkLetter(buttonClicked) {
-    console.log(buttonClicked);
-    const letters = document.getElementsByClassName('letter');
     let matches = null;
     for (let i = 0; i < letters.length; i++) {
-        if (buttonClicked.textContent === letters[i].textContent) {
-            console.log("Match!");
-            letters[i].className = 'show';
-            matches += letters[i].textContent;
-            console.log(matches);
+        if (letters[i].textContent.toLowerCase() === buttonClicked.textContent) {
+            letters[i].classList.add('show');
+            matches += buttonClicked.textContent;
         }; 
     };
     return matches;
@@ -93,6 +89,17 @@ If the missed counter is greater than 4 it displays the lose overlay.
     -Changes overlay display to 'flex;   
 */
 
+function checkWin() {
+    if (letters.length === showing.length) {
+        overlay.classList.add('win');
+        document.querySelector('.title').textContent = "Congratulations, you win!";
+        overlay.style.display = 'flex';
+    } else if (missed > 4) {
+        overlay.classList.add('lose');
+        document.querySelector('.title').textContent = "Sorry, click \"Start Game\" to try again!";
+        overlay.style.display = 'flex';
+    };
+};
 
 //Event Listeners
 
@@ -109,17 +116,17 @@ startGame.addEventListener('click', (e) => {
     When a player chooses a letter the “chosen” class is added to that button so the same letter can’t be chosen twice.
 */
 keyboard.addEventListener('click',(e) => {
-    e.preventDefault();
     const heart = document.querySelector('.tries');
     if (e.target.tagName ==='BUTTON'){
         let buttonClicked = e.target;
         buttonClicked.className = 'chosen';
         buttonClicked.disabled = true;
-        let checked = checkLetter(buttonClicked);
+        const checked = checkLetter(buttonClicked);
         if (checked === null) { 
             heart.remove();
             console.log("Heart removed!");
             missed += 1;
         }; 
     };
+    checkWin();
 });
