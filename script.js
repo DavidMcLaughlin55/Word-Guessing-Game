@@ -2,7 +2,7 @@
 
 const keyboard = document.getElementById('qwerty');
 const phrase = document.getElementById('phrase');
-let startGame = document.querySelector('.btn_reset');
+let btnReset = document.querySelector('.btn_reset');
 const overlay = document.getElementById('overlay');
 const letters = document.getElementsByClassName('letter');
 const showing = document.getElementsByClassName('show');
@@ -82,33 +82,59 @@ function checkLetter(buttonClicked) {
 Checks if the length of the 2 variables are the same and if so displays the win overlay
     -Changes overlay class to 'win'.
     -Changes headline text show user won.
-    -Changes overlay display to 'flex;
+    -Changes overlay display to 'flex'.
+    -Adds a "Play again" button.
 If the missed counter is greater than 4 it displays the lose overlay.
     -Changes overlay class to 'lose'.
     -Changes headline text to show user lost.
-    -Changes overlay display to 'flex;  
+    -Changes overlay display to 'flex'.  
+    -Adds a 'Try again" button.
 */
 
 function checkWin() {
     if (letters.length === showing.length) {
         overlay.classList.add('win');
         document.querySelector('.title').textContent = "Congratulations, you win!";
-        overlay.style.display = 'flex';
+        overlay.style.display = 'flex'; 
+        btnReset.textContent = 'Play again';
     } else if (missed > 4) {
         overlay.classList.add('lose');
-        document.querySelector('.title').textContent = "Sorry, click \"Start Game\" to try again!";
+        document.querySelector('.title').textContent = "Sorry, try again!";
         overlay.style.display = 'flex';
+        btnReset.textContent = 'Try again';
     };
+};
+
+/*
+    --function gameReset--
+    -Regenerates keyboard buttons.
+    -Generates new random phrase.
+    -Sets the number of misses to zero.
+*/
+
+function gameReset(buttonReset) {
+    console.log('Resetting!')
+    const keys = keyboard.getElementsByTagName('button');
+    keys.classList.remove('chosen');
+    addPhraseToDisplay(phraseForDisplay);
+    missed = 0;
 };
 
 //Event Listeners
 
 /* 
-    --startGame--
+    --btnReset--
     This code hides the screen overlay when the user clicks the "Start Game button".
  */
-startGame.addEventListener('click', (e) => {
-    overlay.style.display = 'none';
+btnReset.addEventListener('click', (e) => {
+    if (btnReset.textContent !== 'Start Game') {
+        overlay.style.display = 'none';
+        let buttonReset = e.target;
+        console.log('btnReset clicked!')
+        gameReset(buttonReset);
+    } else {
+        overlay.style.display = 'none';
+    };
 });
 
 /* 

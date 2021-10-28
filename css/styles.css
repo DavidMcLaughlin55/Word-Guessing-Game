@@ -10,10 +10,10 @@
   --color-win: #78CF82;
   --color-lose: #D94545;
   --color-start: #0096db;
-  --color-neutral: #445069;
+  --color-neutral: #0096db;
   --color-neutral-light: #D2D2D2;
   --color-keys: #37474F;
-  --color-keys-light: #E5E5E5;
+  --color-keys-light: #e4f124;
   --font-size-large: 60px;
   --font-size-medium: 20px;
   --transition: all .2s ease-in-out;
@@ -79,6 +79,11 @@ button {
 }
 
 /* Phrase */
+
+#phrase {
+  flex-wrap: wrap;
+  padding: 0 5em 0;
+}
 
 .letter {
   font-family: 'Fjalla One', sans-serif;
