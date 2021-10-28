@@ -2,6 +2,7 @@
 
 const keyboard = document.getElementById('qwerty');
 const phrase = document.getElementById('phrase');
+const list = phrase.querySelector('ul');
 let btnReset = document.querySelector('.btn_reset');
 const overlay = document.getElementById('overlay');
 const letters = document.getElementsByClassName('letter');
@@ -43,7 +44,6 @@ const phraseForDisplay = getRandomPhraseAsArray(phrases);
 
 function addPhraseToDisplay(arr) {
     for (let i = 0; i < arr.length; i++) {
-        const list = phrase.querySelector('ul');
         const arrLetter = document.createElement('li');
         arrLetter.textContent = `${arr[i]}`;
         list.append(arrLetter);
@@ -113,11 +113,19 @@ function checkWin() {
 */
 
 function gameReset(buttonReset) {
-    console.log('Resetting!')
+    console.log('RESETTING GAME!');
+    resetKeys();
+};
+
+function resetKeys() {
+    console.log('Resetting keys!')
     const keys = keyboard.getElementsByTagName('button');
-    keys.classList.remove('chosen');
-    addPhraseToDisplay(phraseForDisplay);
-    missed = 0;
+    for (let i =0; keys.length; i++) {
+        if (keys[i].className === 'chosen') {
+            keys[i].className = '';
+            console.log('Keys reset!');
+        };
+    };
 };
 
 //Event Listeners
