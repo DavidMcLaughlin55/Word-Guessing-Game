@@ -86,7 +86,7 @@ Checks if the length of the 2 variables are the same and if so displays the win 
 If the missed counter is greater than 4 it displays the lose overlay.
     -Changes overlay class to 'lose'.
     -Changes headline text to show user lost.
-    -Changes overlay display to 'flex;   
+    -Changes overlay display to 'flex;  
 */
 
 function checkWin() {
