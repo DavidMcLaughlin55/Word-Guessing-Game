@@ -7,6 +7,7 @@ let btnReset = document.querySelector('.btn_reset');
 const overlay = document.getElementById('overlay');
 const letters = document.getElementsByClassName('letter');
 const showing = document.getElementsByClassName('show');
+const hearts = document.getElementsByClassName('tries');
 
 
 //Stores # of mismatched keys.
@@ -24,7 +25,7 @@ const phrases = ["Live and learn",
 
 /* 
     --getRandomPhraseAsArray--
-    Function gets and random phrase from the phrases array and splits it to return the letters contained as a new array 
+    -Function gets and random phrase from the phrases array and splits it to return the letters contained as a new array 
 */
 function getRandomPhraseAsArray(arr) {
     const randomPhrase = arr[Math.floor(Math.random() * phrases.length)];
@@ -35,11 +36,11 @@ const phraseForDisplay = getRandomPhraseAsArray(phrases);
 
 /* 
     --addPhraseToDisplay function-- 
-    Loops through an array of characters. 
-    For each character in the array it creates a list item with character inside. 
-    It appends the list item to the #phrase ul 
-    If character in the array is a letter the “letter” class is added
-    If character is a space the "space" class is added
+    -Loops through an array of characters. 
+    -For each character in the array it creates a list item with character inside. 
+    -It appends the list item to the #phrase ul 
+    -If character in the array is a letter the “letter” class is added
+    -If character is a space the "space" class is added
 */
 
 function addPhraseToDisplay(arr) {
@@ -59,11 +60,11 @@ addPhraseToDisplay(phraseForDisplay);
 
 /* 
     --checkLetter function-- 
-    Gets all elements with a class of “letter”.
-    Loops over letters and checks if they match the letter in the button the player has clicked.
-    If it matches, a class of “show” is added to the list item containing that letter. 
-    Stores the matching letter inside of a variable and returns that letter.
-    If a match is not found it returns null.
+    -Gets all elements with a class of “letter”.
+    -Loops over letters and checks if they match the letter in the button the player has clicked.
+    -If it matches, a class of “show” is added to the list item containing that letter. 
+    -Stores the matching letter inside of a variable and returns that letter.
+    -If a match is not found it returns null.
 */
 
 function checkLetter(buttonClicked) {
@@ -78,13 +79,13 @@ function checkLetter(buttonClicked) {
 }
 
 /*
---checkWin function--
-Checks if the length of the 2 variables are the same and if so displays the win overlay
+    --checkWin function--
+    -Checks if the length of the 2 variables are the same and if so displays the win overlay
     -Changes overlay class to 'win'.
     -Changes headline text show user won.
     -Changes overlay display to 'flex'.
     -Adds a "Play again" button.
-If the missed counter is greater than 4 it displays the lose overlay.
+    -If the missed counter is greater than 4 it displays the lose overlay.
     -Changes overlay class to 'lose'.
     -Changes headline text to show user lost.
     -Changes overlay display to 'flex'.  
@@ -105,41 +106,32 @@ function checkWin() {
     };
 };
 
-/*
-    --function gameReset--
-    -Regenerates keyboard buttons.
-    -Generates new random phrase.
-    -Sets the number of misses to zero.
+/* 
+    --resetKeys Function--
+    -Resets keyboard keys to initial state.
 */
-
-function gameReset(buttonReset) {
-    console.log('RESETTING GAME!');
-    resetKeys();
-};
-
 function resetKeys() {
-    console.log('Resetting keys!')
     const keys = keyboard.getElementsByTagName('button');
     for (let i =0; keys.length; i++) {
         if (keys[i].className === 'chosen') {
-            keys[i].className = '';
-            console.log('Keys reset!');
+            keys[i].removeAttribute('disabled');
+            keys[i].removeAttribute('class');
         };
     };
 };
+
 
 //Event Listeners
 
 /* 
     --btnReset--
-    This code hides the screen overlay when the user clicks the "Start Game button".
+    -This code hides the screen overlay when the user clicks the "Start Game button".
  */
 btnReset.addEventListener('click', (e) => {
     if (btnReset.textContent !== 'Start Game') {
-        overlay.style.display = 'none';
         let buttonReset = e.target;
-        console.log('btnReset clicked!')
-        gameReset(buttonReset);
+        overlay.style.display = 'none';
+        resetKeys();
     } else {
         overlay.style.display = 'none';
     };
@@ -150,16 +142,18 @@ btnReset.addEventListener('click', (e) => {
     When a player chooses a letter the “chosen” class is added to that button so the same letter can’t be chosen twice.
 */
 keyboard.addEventListener('click',(e) => {
-    const heart = document.querySelector('.tries');
     if (e.target.tagName ==='BUTTON'){
         let buttonClicked = e.target;
         buttonClicked.className = 'chosen';
         buttonClicked.disabled = true;
         const checked = checkLetter(buttonClicked);
         if (checked === null) { 
-            heart.remove();
-            console.log("Heart removed!");
             missed += 1;
+            for (let i = 0; i < missed; i++) {
+                if (missed) {
+                    hearts[i].querySelector('img').src = "images/lostHeart.png";
+                };
+            };
         }; 
     };
     checkWin();
