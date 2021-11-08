@@ -56,7 +56,7 @@ function addPhraseToDisplay(arr) {
     };
 }
 
-addPhraseToDisplay(phraseForDisplay);
+let newPhrase = addPhraseToDisplay(phraseForDisplay);
 
 /* 
     --checkLetter function-- 
@@ -112,13 +112,31 @@ function checkWin() {
 */
 function resetKeys() {
     const keys = keyboard.getElementsByTagName('button');
-    for (let i =0; keys.length; i++) {
+    for (let i =0; i < keys.length; i++) {
         if (keys[i].className === 'chosen') {
+            console.log('resetting the keys!');
             keys[i].removeAttribute('disabled');
             keys[i].removeAttribute('class');
         };
     };
 };
+
+
+/* 
+    --resetMissed Function--
+    -Resets missed to initial state.
+*/
+function resetMissed() {
+    for (let i = 0; i < hearts.length; i++) {
+        if (hearts[i].querySelector('img').src = "images/lostHeart.png") {
+            console.log('resetting the hearts!');
+            hearts[i].querySelector('img').src = "images/liveHeart.png";
+        };
+    };
+    missed = 0;
+};
+
+
 
 
 //Event Listeners
@@ -132,6 +150,7 @@ btnReset.addEventListener('click', (e) => {
         let buttonReset = e.target;
         overlay.style.display = 'none';
         resetKeys();
+        resetMissed();
     } else {
         overlay.style.display = 'none';
     };
