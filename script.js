@@ -114,9 +114,7 @@ function checkWin() {
     -Resets the phrase.
 */
 function resetPhrase() {
-    console.log(list);
     while (list.hasChildNodes()) {
-        console.log('Removing child node');
         list.removeChild(list.lastChild);
     };
 };
@@ -129,7 +127,6 @@ function resetKeys() {
     const keys = keyboard.getElementsByTagName('button');
     for (let i = 0; i < keys.length; i++) {
         if (keys[i].className === 'chosen') {
-            console.log('resetting the keys!');
             keys[i].removeAttribute('disabled');
             keys[i].removeAttribute('class');
         };
@@ -144,7 +141,6 @@ function resetKeys() {
 function resetMissed() {
     for (let i = 0; i < hearts.length; i++) {
         if (hearts[i].querySelector('img').src = "images/lostHeart.png") {
-            console.log('resetting the hearts!');
             hearts[i].querySelector('img').src = "images/liveHeart.png";
         };
     };
