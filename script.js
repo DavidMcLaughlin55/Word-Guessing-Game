@@ -14,49 +14,52 @@ const hearts = document.getElementsByClassName('tries');
 let missed = 0;
 
 //Array storing various phrases for display.
-const phrases = ["Live and learn", 
-    "Throw caution to the wind", 
-    "Cut me some slack", 
+const phrases = ["Live and learn",
+    "Throw caution to the wind",
+    "Cut me some slack",
     "Speak of the devil",
     "Hang in there",
 ];
 
 //Functions 
 
-/* 
+/* Init Phrase */
+function initPhrase() {
+    /* 
     --getRandomPhraseAsArray--
     -Function gets and random phrase from the phrases array and splits it to return the letters contained as a new array 
 */
-function getRandomPhraseAsArray(arr) {
-    const randomPhrase = arr[Math.floor(Math.random() * phrases.length)];
-    return randomPhrase.split('');
-};
-
-const phraseForDisplay = getRandomPhraseAsArray(phrases);
-
-/* 
-    --addPhraseToDisplay function-- 
-    -Loops through an array of characters. 
-    -For each character in the array it creates a list item with character inside. 
-    -It appends the list item to the #phrase ul 
-    -If character in the array is a letter the “letter” class is added
-    -If character is a space the "space" class is added
-*/
-
-function addPhraseToDisplay(arr) {
-    for (let i = 0; i < arr.length; i++) {
-        const arrLetter = document.createElement('li');
-        arrLetter.textContent = `${arr[i]}`;
-        list.append(arrLetter);
-        if (arrLetter.textContent != ' ') {
-            arrLetter.className = 'letter';
-        } else {
-            arrLetter.className = 'space';
-        };
+    function getRandomPhraseAsArray(arr) {
+        const randomPhrase = arr[Math.floor(Math.random() * phrases.length)];
+        return randomPhrase.split('');
     };
-}
 
-let newPhrase = addPhraseToDisplay(phraseForDisplay);
+    const phraseForDisplay = getRandomPhraseAsArray(phrases);
+
+    /* 
+        --addPhraseToDisplay function-- 
+        -Loops through an array of characters. 
+        -For each character in the array it creates a list item with character inside. 
+        -It appends the list item to the #phrase ul 
+        -If character in the array is a letter the “letter” class is added
+        -If character is a space the "space" class is added
+    */
+
+    function addPhraseToDisplay(arr) {
+        for (let i = 0; i < arr.length; i++) {
+            const arrLetter = document.createElement('li');
+            arrLetter.textContent = `${arr[i]}`;
+            list.append(arrLetter);
+            if (arrLetter.textContent != ' ') {
+                arrLetter.className = 'letter';
+            } else {
+                arrLetter.className = 'space';
+            };
+        };
+    }
+
+    let newPhrase = addPhraseToDisplay(phraseForDisplay);
+}
 
 /* 
     --checkLetter function-- 
@@ -73,7 +76,7 @@ function checkLetter(buttonClicked) {
         if (letters[i].textContent.toLowerCase() === buttonClicked.textContent) {
             letters[i].classList.add('show');
             matches += buttonClicked.textContent;
-        }; 
+        };
     };
     return matches;
 }
@@ -96,7 +99,7 @@ function checkWin() {
     if (letters.length === showing.length) {
         overlay.classList.add('win');
         document.querySelector('.title').textContent = "Congratulations, you win!";
-        overlay.style.display = 'flex'; 
+        overlay.style.display = 'flex';
         btnReset.textContent = 'Play again';
     } else if (missed > 4) {
         overlay.classList.add('lose');
@@ -107,12 +110,24 @@ function checkWin() {
 };
 
 /* 
+    --resetPhrase--
+    -Resets the phrase.
+*/
+function resetPhrase() {
+    console.log(list);
+    while (list.hasChildNodes()) {
+        console.log('Removing child node');
+        list.removeChild(list.lastChild);
+    };
+};
+
+/* 
     --resetKeys Function--
     -Resets keyboard keys to initial state.
 */
 function resetKeys() {
     const keys = keyboard.getElementsByTagName('button');
-    for (let i =0; i < keys.length; i++) {
+    for (let i = 0; i < keys.length; i++) {
         if (keys[i].className === 'chosen') {
             console.log('resetting the keys!');
             keys[i].removeAttribute('disabled');
@@ -136,9 +151,6 @@ function resetMissed() {
     missed = 0;
 };
 
-
-
-
 //Event Listeners
 
 /* 
@@ -149,10 +161,13 @@ btnReset.addEventListener('click', (e) => {
     if (btnReset.textContent !== 'Start Game') {
         let buttonReset = e.target;
         overlay.style.display = 'none';
+        resetPhrase();
         resetKeys();
         resetMissed();
+        initPhrase();
     } else {
         overlay.style.display = 'none';
+        initPhrase();
     };
 });
 
@@ -160,20 +175,20 @@ btnReset.addEventListener('click', (e) => {
     --buttonClick--
     When a player chooses a letter the “chosen” class is added to that button so the same letter can’t be chosen twice.
 */
-keyboard.addEventListener('click',(e) => {
-    if (e.target.tagName ==='BUTTON'){
+keyboard.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') {
         let buttonClicked = e.target;
         buttonClicked.className = 'chosen';
         buttonClicked.disabled = true;
         const checked = checkLetter(buttonClicked);
-        if (checked === null) { 
+        if (checked === null) {
             missed += 1;
             for (let i = 0; i < missed; i++) {
                 if (missed) {
                     hearts[i].querySelector('img').src = "images/lostHeart.png";
                 };
             };
-        }; 
+        };
     };
     checkWin();
 });
